@@ -1,31 +1,39 @@
 package fashion_show;
 
-import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
+
 
 public class Models {
 
     private int n, m;
 
-    private String temp_line;
+    private ArrayList<String> changesList;
 
-    private String data[];
-
-    private char fashion_matrix [] [];
-
-    Scanner entradaEscaner = new Scanner (System.in);
+    private char fashion_matrix [] [],matrix_backup[][];
 
 
-
-    public  Models(int n, int m, char[][] matrix){
+    public  Models(int n, int m, char[][] matrix) throws IOException {
         this.m = m;
         this.n = n;
-        this.fashion_matrix = matrix;
-        //this.getModelsPositions();
+        this.fashion_matrix = matrix.clone();
+        this.matrix_backup = new char[n][n];
+        this.changesList = new ArrayList<String>();
+        this.fillMatrix();
+
+
 
 
     }
 
+    public void fillMatrix(){
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < n; j++){
+                this.matrix_backup[i][j] = this.fashion_matrix[i][j];
+            }
 
+        }
+    }
 
     public void printFashionMatrix() {
 
@@ -46,6 +54,9 @@ public class Models {
         checkPlus(n-1,n-1);
 
         checkX(n-1,n-1);
+
+
+
 
 
     }
@@ -238,5 +249,49 @@ public class Models {
 
     }
 
+    public int countPoints(){
+        int suma=0;
 
+        for (int i=0; i<n; i++){
+            for (int j=0;j<n;j++){
+
+                if(this.fashion_matrix[i][j]=='+' || this.fashion_matrix[i][j]=='x'){
+
+                    suma+=1;
+                }
+                else if (this.fashion_matrix[i][j]=='o'){
+
+                    suma+= 2;
+
+                }
+
+
+            }
+        }
+
+        return suma;
+    }
+
+    public int matrix_Changes(){
+        int count=0;
+
+        for (int i=0; i<n; i++){
+            for (int j=0;j<n;j++){
+
+                if(this.fashion_matrix[i][j]!= this.matrix_backup[i][j]){
+                        count++;
+
+                        this.changesList.add(this.fashion_matrix[i][j]+" "+(i+1)+" "+(j+1));
+                }
+
+
+            }
+
+        }
+        return count;
+    }
+
+    public ArrayList<String> getChangesList() {
+        return changesList;
+    }
 }
